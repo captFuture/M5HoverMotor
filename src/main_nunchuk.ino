@@ -19,11 +19,11 @@ static unsigned int controller_type;
 #define SERIAL_BAUD         115200      // [-] Baud rate for built-in Serial (used for the Serial Monitor)
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
 #define TIME_SEND           100         // [ms] Sending time interval
-#define SPEED_MAX           700         // [-] Maximum speed 
-#define SPEED_MIN           -700        // [-] Minimum speed 
-#define STEER_MAX           400         // [-] Maximum steer
-#define STEER_MIN           -400        // [-] Minimum steer
-#define ACCEL_MIN           1000
+#define SPEED_MAX           - 300         // [-] Maximum speed 
+#define SPEED_MIN           300        // [-] Minimum speed 
+#define STEER_MAX           200         // [-] Maximum steer
+#define STEER_MIN           - 200        // [-] Minimum steer
+#define ACCEL_MIN           200
 #define BOOST               100         // 
 
 //#define DEBUG_RX                        // [-] Debug received data. Prints all bytes to serial (comment-out to disable)
@@ -242,13 +242,13 @@ void loop(void)
       triggerstate = state.z;
       switchState = state.c;
 
-      if( leftRightValue > -20 && leftRightValue < 20 ){
+      if( leftRightValue > -15 && leftRightValue < 15 ){
         leftRightValue = 0;
       }else{
         leftRightValue = leftRightValue - leftRightCalibration;
       }
 
-      if(forwardReverseValue > -10 && forwardReverseValue < 10){
+      if(forwardReverseValue > -15 && forwardReverseValue < 15){
         forwardReverseValue = 0;
       }else{
         forwardReverseValue = forwardReverseValue - forwardReverseCalibration;
@@ -354,6 +354,8 @@ void setDisplay(int myDrive, boolean clear){
     M5.Lcd.print("speed: "); M5.Lcd.println(myDrive);
     M5.Lcd.print("MAX: "); M5.Lcd.println(SPEED_MAX);
     M5.Lcd.print("MIN: "); M5.Lcd.println(SPEED_MIN);
+    M5.Lcd.print("ST-MAX: "); M5.Lcd.println(STEER_MAX);
+    M5.Lcd.print("ST-MIN: "); M5.Lcd.println(STEER_MIN);
     M5.Lcd.print("accel: "); M5.Lcd.println(accel);
     //M5.Lcd.print("boost: "); M5.Lcd.println(boost);
 }
