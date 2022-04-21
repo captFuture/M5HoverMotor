@@ -11,14 +11,11 @@ static lv_color_t buf[LV_HOR_RES_MAX * 10];
 static lv_obj_t * page;
 static lv_obj_t * txt2;
 static lv_obj_t * txt5;
+static lv_obj_t * txt6;
 static lv_obj_t * label;
 static lv_obj_t * gauge;
 static lv_obj_t * gauge2;
-static lv_obj_t * chart1;
-static lv_obj_t * chart2;
 static lv_obj_t * tabview;
-static lv_chart_series_t *ser1;
-static lv_chart_series_t *ser2;
 uint32_t period = 10; //
 int tb = 4;           // Number of tabs
 int tab_pos = 0;
@@ -48,8 +45,15 @@ static bool my_touchpad_read(lv_indev_drv_t * indev_driver,
   }
   // B Button : Auto / Manual Display ---------------------------------
   if (M5.BtnB.wasPressed()){
-    auto_man = !auto_man;          M5.update(); return false;
+    configNum = configNum+1;
+      if(configNum > 6){
+        configNum = 0;
+      }
   }
+
+  if (M5.BtnB.pressedFor(2000)){
+    auto_man = !auto_man;          M5.update(); return false;
+  }  
   // No button operation ----------------------------------------------
   data->state =LV_INDEV_STATE_REL; M5.update(); return false;
 }

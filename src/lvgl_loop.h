@@ -8,12 +8,19 @@ if (first == 0){
     lv_label_set_text_fmt(label," ");
     first = 1;
 } 
-lv_label_set_text_fmt(txt2,   "%d", driveSpeed );
-lv_label_set_text_fmt(txt5,   "%d", etvoc);
+lv_label_set_text_fmt(txt2,   "speed: %d", driveSpeed );
+lv_label_set_text_fmt(txt5,   "configNum: %d", configNum);
+lv_label_set_text_fmt(txt6,   "%d", configNum);
+//lv_label_set_text_fmt(label2, "Speed %d\n\n\n\n\nkm/h", configNum);
+
 lv_gauge_set_value   (gauge,     0, driveSpeed );
-//lv_gauge_set_value   (gauge2,     0, batVoltage );
-lv_chart_set_next    (chart1, ser1, driveSpeed ); 
-lv_chart_set_next    (chart2, ser2, driveSpeed); 
+lv_gauge_set_value   (gauge2,     0, batVoltage );
+
+if(motorOn){
+   //lv_style_set_bg_color(&st,LV_STATE_DEFAULT,lv_color_hex(0xE52521));
+}else{
+  // lv_style_set_bg_color(&st,LV_STATE_DEFAULT,lv_color_hex(0x049CD8));
+}
 
 if ( !auto_man ) {
   if ( (millis()-last)>tabview_time){

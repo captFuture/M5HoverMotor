@@ -28,9 +28,11 @@
       }
       if(state.z){
         configNum = configNum+1;
-        if(configNum > 4){
+        if(configNum > 6){
           configNum = 0;
         }
+
+        // 300 + 100 * 0,1,2,3 = 0, 400, 500, 600, 700, 800
         
         delay(200);
       }
