@@ -2,12 +2,8 @@
 #include <M5Stack.h>
 #include "wii_i2c.h"
 #include <Ramp.h>
-#include "BLEDevice.h"
 
 #include <WiFi.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
-#include <AsyncElegantOTA.h>
 
 #include <ArduinoJson.h>
 #include "FS.h"
@@ -56,7 +52,6 @@ Config3 config3;
 
 const char* ssid = config.ssid;
 const char* password = config.passwd;
-AsyncWebServer server(80);
 
 #define TaskStackSize   5120
 //#include "lvgl.h"
@@ -68,12 +63,10 @@ AsyncWebServer server(80);
 #define READ_DELAY 30
 static unsigned int controller_type;
 
-// ########################## DEFINES ##########################
 #define HOVER_SERIAL_BAUD   115200      // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
 #define SERIAL_BAUD         115200      // [-] Baud rate for built-in Serial (used for the Serial Monitor)
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
 #define TIME_SEND           100         // [ms] Sending time interval
-
 
 //#define DEBUG_RX                        // [-] Debug received data. Prints all bytes to serial (comment-out to disable)
 HardwareSerial &HoverSerial = Serial2;
@@ -88,8 +81,13 @@ boolean motorOn = false;
 boolean triggerstate = false;
 boolean switchState = false;
 boolean useNunchuk = true;
-boolean useOta = true;
-float driveSpeed = 0;
+
+/* Telemetry */
+int16_t driveSpeed = 0;
+int16_t speedR = 0;
+int16_t speedL = 0;
+int16_t batVoltage = 0;
+int16_t boardTemp = 0;
 
 boolean triggerReleased = true;
 int configNum = 0;
@@ -99,15 +97,11 @@ rampInt downRamp;
 
 int leftRightCalibration = 0;
 int forwardReverseCalibration = 0;
-
 int thresholdMovement = 100;
-
 int leftRightValue = 0;
 int forwardReverseValue = 0;
-
 int OLDleftRightValue = 0;
 int OLDforwardReverseValue = 0;
-
 int accel = config.accel_min; // Acceleration time [ms]
 int safetyCool = 10;
 int myDrive = 0;
@@ -145,9 +139,9 @@ typedef struct{
 SerialFeedback Feedback;
 SerialFeedback NewFeedback;
 
+#include "lvgl_start.h"
 #include "configload.h"
 #include "display.h"
-
 // ########################## SETUP ##########################
 void setup() 
 {
@@ -187,12 +181,17 @@ void setup()
     }
   }
 
-  if(useOta){
-    #include <mywifi.h>
-  }
-
   setDisplay(myDrive, true);
+
+  #include "lvgl_setup.h"
+  Serial.println("Setup Done");
 }
+
+uint32_t tabview_time = 5000;        // Auto Time
+uint32_t lastMillis = 0; 
+uint32_t last = 0;
+uint16_t eco2, etvoc, errstat, raw;  // Read data
+int first = 0;
 
 #include "hoverboard_telemetry.h"
 
@@ -212,16 +211,16 @@ unsigned long iTimeSend = 0;
 
 void loop(void)
 { 
-  M5.update();
   myDrive = upRamp.update();
   unsigned long timeNow = millis();
+  
+  #include "lvgl_loop.h"
 
   if(useNunchuk){
     #include "nunchuk.h"
   }
 
   Receive();
-  #include "buttons.h"
 
   if (iTimeSend > timeNow) return;
   iTimeSend = timeNow + TIME_SEND;

@@ -56,9 +56,16 @@ void Receive()
             Serial.print(" 6: ");  Serial.print(Feedback.boardTemp);
             Serial.print(" 7: ");  Serial.println(Feedback.cmdLed);
 
-            //driveSpeed = 2*3,14*8,255*Feedback.speedR_meas*60/1000;
-            //driveSpeed = 3,11 * Feedback.speedL_meas;
-            driveSpeed = (float)Feedback.speedL_meas;
+            speedR = Feedback.speedR_meas;
+            speedL = Feedback.speedL_meas;
+            batVoltage = Feedback.batVoltage;
+            boardTemp = Feedback.boardTemp;
+            
+            float speedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
+            float tempDriveSpeed = (float)Feedback.speedL_meas * speedFactor;
+            driveSpeed = abs((int)tempDriveSpeed);
+
+
         } else {
           Serial.println("Non-valid data skipped");
         }
