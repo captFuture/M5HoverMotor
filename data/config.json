@@ -1,0 +1,16 @@
+{
+  "cartname": "TarantlCart_000",
+  "ssid": "TarantlBros",
+  "passwd": "chillfumml",
+  "speedprofile":[
+    {
+      "speed_max":-300,
+      "speed_min":300,
+      "steer_max":200,
+      "steer_min":-200,
+      "accel":200,
+      "boost":100,
+      "symbol":0
+    }
+  ]
+}
