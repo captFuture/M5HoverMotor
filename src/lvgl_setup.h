@@ -37,6 +37,7 @@
   // change : lv_arduino/lv_conf.h/ #define LV_FONT_MONTSERRAT_28 1
   lv_style_set_text_font(&st,LV_STATE_DEFAULT,&lv_font_montserrat_28); 
   lv_page_set_scrollbar_mode(tab1, LV_SCROLLBAR_MODE_OFF); //scroll off
+
   label = lv_label_create(   tab1, NULL);
   lv_obj_add_style(    label, LV_LABEL_PART_MAIN, &st);        
   lv_label_set_recolor(label, true); // Enable re-coloring by commands
@@ -60,33 +61,35 @@
   int p2 =  -35; // tab1 
 
   
-  // txt2 -------------------------------------------------------------
+  // tab 1 txt 1 -------------------------------------------------------------
   static lv_style_t st2; lv_style_init(&st2);
   lv_style_set_text_font(&st2,LV_STATE_DEFAULT,&lv_font_montserrat_28); 
+  txt1 = lv_label_create( tab1, NULL);
+  lv_obj_add_style(       txt1, LV_LABEL_PART_MAIN, &st2);
+  lv_obj_set_auto_realign(txt1, true);
+  lv_obj_align(           txt1, NULL, LV_ALIGN_CENTER, 0, p1);
+  lv_label_set_align(     txt1, LV_LABEL_ALIGN_CENTER);
+  lv_label_set_text(      txt1, "wait");
+  //-------------------------------------------------------------------
+
+  // tab 1 txt 2 -------------------------------------------------------------
   txt2 = lv_label_create( tab1, NULL);
   lv_obj_add_style(       txt2, LV_LABEL_PART_MAIN, &st2);
   lv_obj_set_auto_realign(txt2, true);
-  lv_obj_align(           txt2, NULL, LV_ALIGN_CENTER, 0, p1);
+  lv_obj_align(           txt2, NULL, LV_ALIGN_CENTER, 0, p2);
   lv_label_set_align(     txt2, LV_LABEL_ALIGN_CENTER);
   lv_label_set_text(      txt2, "wait");
   //-------------------------------------------------------------------
 
-  // txt5 -------------------------------------------------------------
-  txt5 = lv_label_create( tab1, NULL);
-  lv_obj_add_style(       txt5, LV_LABEL_PART_MAIN, &st2);
-  lv_obj_set_auto_realign(txt5, true);
-  lv_obj_align(           txt5, NULL, LV_ALIGN_CENTER, 0, p2);
-  lv_label_set_align(     txt5, LV_LABEL_ALIGN_CENTER);
-  lv_label_set_text(      txt5, "wait");
-  //-------------------------------------------------------------------
 
-   // txt6 -------------------------------------------------------------
-  txt6 = lv_label_create( tab2, NULL);
-  lv_obj_add_style(       txt6, LV_LABEL_PART_MAIN, &st2);
-  lv_obj_set_auto_realign(txt6, true);
-  lv_obj_align(           txt6, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, -40);
-  lv_label_set_align(     txt6, LV_LABEL_ALIGN_CENTER);
-  lv_label_set_text(      txt6, "0");
+
+   // tab 2 txt 3 -------------------------------------------------------------
+  txt3 = lv_label_create( tab2, NULL);
+  lv_obj_add_style(       txt3, LV_LABEL_PART_MAIN, &st2);
+  lv_obj_set_auto_realign(txt3, true);
+  lv_obj_align(           txt3, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, -40);
+  lv_label_set_align(     txt3, LV_LABEL_ALIGN_CENTER);
+  lv_label_set_text(      txt3, "0");
   //-------------------------------------------------------------------
 
   // driveSpeed GAUGE tab2 ==================================================
@@ -95,15 +98,22 @@
   static lv_style_t st3; lv_style_init(&st3);
   lv_style_set_text_font(&st3,LV_STATE_DEFAULT,&lv_font_montserrat_16); 
   static lv_color_t needle_colors[1];
+ 
   needle_colors[0] = lv_color_hex(0x049CD8);
+  needle_colors[1] = lv_color_hex(0xE52521);
+
+
   lv_page_set_scrollbar_mode(tab2, LV_SCROLLBAR_MODE_OFF); //scroll off
   gauge = lv_gauge_create(   tab2, NULL); // Display gauge on tab2
-  lv_gauge_set_needle_count(gauge, 1, needle_colors);
+
+  lv_gauge_set_needle_count(gauge, 2, needle_colors);
   lv_obj_set_size(          gauge, 240, 240);
   lv_gauge_set_range(       gauge, 0, 25); // y range  
   lv_obj_align(             gauge, NULL, LV_ALIGN_CENTER, 0, -5);
   lv_gauge_set_value(       gauge, 0, 0);      // value
+  lv_gauge_set_value(       gauge, 1, 0);      // value
   lv_obj_set_style_local_bg_color(gauge, LV_CHART_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0xFBD000)); 
+
   lv_obj_t * label2 = lv_label_create(tab2, NULL);
   lv_obj_add_style(        label2, LV_LABEL_PART_MAIN, &st3);  // 16p
   lv_obj_set_auto_realign( label2, true);

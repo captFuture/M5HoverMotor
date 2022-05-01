@@ -65,7 +65,6 @@ void Receive()
             float tempDriveSpeed = (float)Feedback.speedL_meas * speedFactor;
             driveSpeed = abs((int)tempDriveSpeed);
 
-
         } else {
           Serial.println("Non-valid data skipped");
         }

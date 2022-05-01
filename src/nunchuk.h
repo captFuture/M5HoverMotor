@@ -28,11 +28,14 @@
       }
       if(state.z){
         configNum = configNum+1;
-        if(configNum > 6){
+        if(configNum > 4){
           configNum = 0;
         }
 
-        // 300 + 100 * 0,1,2,3 = 0, 400, 500, 600, 700, 800
+        // USART command 1000 is 1000 RPM
+        // 300 + 100 * 0,1,2,3,4 = 300, 400, 500, 600, 700
+        // mapped Value is sent to Controller and board speeds up
+        
         
         delay(200);
       }
@@ -58,17 +61,24 @@
         forwardReverseValue = forwardReverseValue - forwardReverseCalibration;
       }
 
-      leftRightValue = map(leftRightValue, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
+      leftRightValue = map(leftRightValue, -100, 100, config.steer_min, config.steer_max);
       forwardReverseValue = map(forwardReverseValue, -100, 100, config.speed_min+(config.boost_max*configNum), config.speed_max-(config.boost_max*configNum));
 
       //M5.Lcd.print("x: "); M5.Lcd.println(leftRightValue);
       //M5.Lcd.print("y: "); M5.Lcd.println(forwardReverseValue);
       
+      if(forwardReverseValue < 0){
+        forwardReverseValue = forwardReverseValue/10;
+      } 
 
-      if(OLDforwardReverseValue > forwardReverseValue){       // brake
+      //if(OLDforwardReverseValue > forwardReverseValue){       // brake
+          //accelerAte(OLDforwardReverseValue, forwardReverseValue);
+        //}else if(OLDforwardReverseValue < forwardReverseValue){ 
           accelerAte(OLDforwardReverseValue, forwardReverseValue);
-        }else if(OLDforwardReverseValue < forwardReverseValue){ 
-          accelerAte(OLDforwardReverseValue, forwardReverseValue);
-        }
+        //}
+
+    //float SentSpeedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
+    //float tempSentSpeed = (float)forwardReverseValue * SentSpeedFactor;
+    //sentSpeed = abs((int)tempSentSpeed);
 
     }

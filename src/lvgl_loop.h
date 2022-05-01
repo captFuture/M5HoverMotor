@@ -8,12 +8,14 @@ if (first == 0){
     lv_label_set_text_fmt(label," ");
     first = 1;
 } 
-lv_label_set_text_fmt(txt2,   "speed: %d", driveSpeed );
-lv_label_set_text_fmt(txt5,   "configNum: %d", configNum);
-lv_label_set_text_fmt(txt6,   "%d", configNum);
+lv_label_set_text_fmt(txt1,   "speed: %d", driveSpeed );
+lv_label_set_text_fmt(txt2,   "configNum: %d", configNum);
+lv_label_set_text_fmt(txt3,   "%d", configNum);
 //lv_label_set_text_fmt(label2, "Speed %d\n\n\n\n\nkm/h", configNum);
 
 lv_gauge_set_value   (gauge,     0, driveSpeed );
+//lv_gauge_set_value   (gauge,     1, sentSpeed );
+
 lv_gauge_set_value   (gauge2,     0, batVoltage );
 
 if(motorOn){

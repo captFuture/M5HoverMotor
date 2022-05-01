@@ -9,9 +9,9 @@ Ticker tick;
 static lv_disp_buf_t disp_buf;
 static lv_color_t buf[LV_HOR_RES_MAX * 10];
 static lv_obj_t * page;
+static lv_obj_t * txt1;
 static lv_obj_t * txt2;
-static lv_obj_t * txt5;
-static lv_obj_t * txt6;
+static lv_obj_t * txt3;
 static lv_obj_t * label;
 static lv_obj_t * gauge;
 static lv_obj_t * gauge2;
@@ -46,7 +46,7 @@ static bool my_touchpad_read(lv_indev_drv_t * indev_driver,
   // B Button : Auto / Manual Display ---------------------------------
   if (M5.BtnB.wasPressed()){
     configNum = configNum+1;
-      if(configNum > 6){
+      if(configNum > 4){
         configNum = 0;
       }
   }

@@ -21,41 +21,13 @@ struct Config {
   int boost_max;
 };
 
-struct Config2 {
-  char cartname[64];
-  char ssid[64];
-  char passwd[64];
-  int speed_max;
-  int speed_min;
-  int steer_max;
-  int steer_min;
-  int accel_min;
-  int boost_max;
-};
-
-struct Config3 {
-  char cartname[64];
-  char ssid[64];
-  char passwd[64];
-  int speed_max;
-  int speed_min;
-  int steer_max;
-  int steer_min;
-  int accel_min;
-  int boost_max;
-};
-
 const char *filename = "/config.json";
 Config config;
-Config2 config2;
-Config3 config3;
 
 const char* ssid = config.ssid;
 const char* password = config.passwd;
 
 #define TaskStackSize   5120
-//#include "lvgl.h"
-//#include "blejoypad.h"
 #define PIN_SDA 21
 #define PIN_SCL 22
 #define WII_I2C_PORT 0
@@ -84,43 +56,34 @@ boolean useNunchuk = true;
 
 /* Telemetry */
 int16_t driveSpeed = 0;
+//int16_t sentSpeed = 0;
 int16_t speedR = 0;
 int16_t speedL = 0;
 int16_t batVoltage = 0;
 int16_t boardTemp = 0;
 
 boolean triggerReleased = true;
-int configNum = 0;
+uint16_t configNum = 0;
 
 rampInt upRamp;
 rampInt downRamp;
 
-int leftRightCalibration = 0;
-int forwardReverseCalibration = 0;
-int thresholdMovement = 100;
-int leftRightValue = 0;
-int forwardReverseValue = 0;
-int OLDleftRightValue = 0;
-int OLDforwardReverseValue = 0;
-int accel = config.accel_min; // Acceleration time [ms]
-int safetyCool = 10;
-int myDrive = 0;
-int oldmyDrive = 0;
+uint16_t leftRightCalibration = 0;
+uint16_t forwardReverseCalibration = 0;
+uint16_t thresholdMovement = 100;
+uint16_t leftRightValue = 0;
+uint16_t forwardReverseValue = 0;
+uint16_t OLDleftRightValue = 0;
+uint16_t OLDforwardReverseValue = 0;
+uint16_t accel = config.accel_min; // Acceleration time [ms]
+uint16_t safetyCool = 10;
+uint16_t myDrive = 0;
+uint16_t oldmyDrive = 0;
 
 typedef struct{
    uint16_t start;
-  //uint16_t dpitch; // sideboard usart
-  //uint16_t pitch; // sideboard usart
    int16_t  steer;
    int16_t  speed;
-  //uint16_t sensors; 
-  // 0:OFF or 1:ON for switching input when dual input is used
-  // controltype; 
-  // 00:FOC 10:Sinusoidal 01:Commutation
-  // controlmode; 
-  // 00:Voltage 10:Speed 01:Torque
-  // fieldweakening; 
-  // 0:off 1:on
     uint16_t checksum;
 } SerialCommand;
 SerialCommand Command;
@@ -141,7 +104,7 @@ SerialFeedback NewFeedback;
 
 #include "lvgl_start.h"
 #include "configload.h"
-#include "display.h"
+
 // ########################## SETUP ##########################
 void setup() 
 {
@@ -180,8 +143,6 @@ void setup()
       return;
     }
   }
-
-  setDisplay(myDrive, true);
 
   #include "lvgl_setup.h"
   Serial.println("Setup Done");
@@ -226,12 +187,10 @@ void loop(void)
   iTimeSend = timeNow + TIME_SEND;
   if(motorOn == true){
     Send(leftRightValue, myDrive);
-    setDisplay(myDrive, true);
     oldmyDrive = myDrive;
   }else{
     myDrive = 0;
     Send(0, 0);
-    setDisplay(myDrive, true);
   }
   
 }
