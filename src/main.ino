@@ -18,6 +18,7 @@ struct Config {
   int steer_max;
   int steer_min;
   int accel_min;
+  int decel_min;
   int boost_max;
 };
 
@@ -53,6 +54,7 @@ boolean motorOn = false;
 boolean triggerstate = false;
 boolean switchState = false;
 boolean useNunchuk = true;
+unsigned long timeNow = 0;
 
 /* Telemetry */
 int16_t driveSpeed = 0;
@@ -65,9 +67,6 @@ int16_t boardTemp = 0;
 boolean triggerReleased = true;
 uint16_t configNum = 0;
 
-rampInt upRamp;
-rampInt downRamp;
-
 uint16_t leftRightCalibration = 0;
 uint16_t forwardReverseCalibration = 0;
 uint16_t thresholdMovement = 100;
@@ -76,7 +75,10 @@ uint16_t forwardReverseValue = 0;
 uint16_t OLDleftRightValue = 0;
 uint16_t OLDforwardReverseValue = 0;
 uint16_t accel = config.accel_min; // Acceleration time [ms]
+uint16_t decel = config.accel_min; // Acceleration time [ms]
 uint16_t safetyCool = 10;
+
+
 uint16_t myDrive = 0;
 uint16_t oldmyDrive = 0;
 
@@ -157,8 +159,13 @@ int first = 0;
 #include "hoverboard_telemetry.h"
 
 void accelerAte(int16_t start, int16_t target){
-  upRamp.go(start);
-  upRamp.go(target, accel, LINEAR, ONCEFORWARD);
+  myDrive = target;
+  oldmyDrive = myDrive;
+}
+
+void decelerAte(int16_t start, int16_t target){
+  myDrive = target;
+  oldmyDrive = myDrive;
 }
 
 void calibrateCenter(int16_t statex, int16_t statey){
@@ -172,26 +179,23 @@ unsigned long iTimeSend = 0;
 
 void loop(void)
 { 
-  myDrive = upRamp.update();
-  unsigned long timeNow = millis();
-  
   #include "lvgl_loop.h"
-
   if(useNunchuk){
     #include "nunchuk.h"
   }
 
-  Receive();
+  ReceiveTelemetry();
 
-  if (iTimeSend > timeNow) return;
-  iTimeSend = timeNow + TIME_SEND;
-  if(motorOn == true){
-    Send(leftRightValue, myDrive);
-    oldmyDrive = myDrive;
-  }else{
-    myDrive = 0;
-    Send(0, 0);
+  if (millis() > TIME_SEND + iTimeSend ){
+    iTimeSend = millis();
+
+    if(motorOn == true){
+      SendCommand(leftRightValue, myDrive);
+    }else{
+      myDrive = 0;
+      SendCommand(0, 0);
+    }
   }
-  
+
 }
 

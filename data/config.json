@@ -9,6 +9,7 @@
       "steer_max":100,
       "steer_min":-100,
       "accel":200,
+      "decel":200,
       "boost":100,
       "symbol":0
     }

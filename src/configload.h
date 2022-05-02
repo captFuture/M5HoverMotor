@@ -28,6 +28,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.steer_max = speedprofile_0["steer_max"] | -100;
   config.steer_min = speedprofile_0["steer_min"] | 100;
   config.accel_min = speedprofile_0["accel_min"] | 200;
+  config.accel_min = speedprofile_0["decel_min"] | 200;
   config.boost_max = speedprofile_0["boost"] | 100;
 
 

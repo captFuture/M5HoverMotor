@@ -35,8 +35,7 @@
         // USART command 1000 is 1000 RPM
         // 300 + 100 * 0,1,2,3,4 = 300, 400, 500, 600, 700
         // mapped Value is sent to Controller and board speeds up
-        
-        
+       
         delay(200);
       }
 
@@ -47,8 +46,6 @@
 
       if( leftRightValue > -15 && leftRightValue < 15 ){
         leftRightValue = 0;
-      //}else if(leftRightValue < config.steer_max && leftRightValue > config.steer_min){
-        //leftRightValue = 0;
       }else{
         leftRightValue = leftRightValue - leftRightCalibration;
       }
@@ -67,15 +64,11 @@
       //M5.Lcd.print("x: "); M5.Lcd.println(leftRightValue);
       //M5.Lcd.print("y: "); M5.Lcd.println(forwardReverseValue);
       
-      if(forwardReverseValue < 0){
-        forwardReverseValue = forwardReverseValue/10;
-      } 
-
-      //if(OLDforwardReverseValue > forwardReverseValue){       // brake
-          //accelerAte(OLDforwardReverseValue, forwardReverseValue);
-        //}else if(OLDforwardReverseValue < forwardReverseValue){ 
+      if(OLDforwardReverseValue > forwardReverseValue){       // brake
           accelerAte(OLDforwardReverseValue, forwardReverseValue);
-        //}
+        }else if(OLDforwardReverseValue < forwardReverseValue){ 
+          accelerAte(OLDforwardReverseValue, forwardReverseValue);
+        }
 
     //float SentSpeedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
     //float tempSentSpeed = (float)forwardReverseValue * SentSpeedFactor;

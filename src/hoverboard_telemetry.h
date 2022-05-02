@@ -1,5 +1,5 @@
 // ########################## SEND ##########################
-void Send(int16_t uSteer, int16_t uSpeed)
+void SendCommand(int16_t uSteer, int16_t uSpeed)
 {
   // Create command
   Command.start    = (uint16_t)START_FRAME;
@@ -15,7 +15,7 @@ void Send(int16_t uSteer, int16_t uSpeed)
 }
 
 // ########################## RECEIVE ##########################
-void Receive()
+void ReceiveTelemetry()
 {
     if (HoverSerial.available()) {
         incomingByte 	  = HoverSerial.read();                                
