@@ -40,6 +40,7 @@
       }
 
       leftRightValue = state.x;
+      forwardReverseInput = state.y;
       forwardReverseValue = state.y;
       triggerstate = state.z;
       switchState = state.c;
@@ -50,16 +51,20 @@
         leftRightValue = leftRightValue - leftRightCalibration;
       }
 
-      if(forwardReverseValue > -15 && forwardReverseValue < 15){
+      if(forwardReverseInput > -15 && forwardReverseInput < 15){
         forwardReverseValue = 0;
-      }else if(forwardReverseValue < config.speed_max+(config.boost_max*configNum) && forwardReverseValue > config.speed_min+(config.boost_max*configNum)){
+      }else if(forwardReverseInput < config.speed_max+(config.boost_max*configNum) && forwardReverseInput > config.speed_min+(config.boost_max*configNum)){
         forwardReverseValue = 0;
       }else{
         forwardReverseValue = forwardReverseValue - forwardReverseCalibration;
       }
 
+      if(forwardReverseInput < -50){
+        forwardReverseInput = -50; // limit backward
+      }
+
       leftRightValue = map(leftRightValue, -100, 100, config.steer_min, config.steer_max);
-      forwardReverseValue = map(forwardReverseValue, -100, 100, config.speed_min+(config.boost_max*configNum), config.speed_max-(config.boost_max*configNum));
+      forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min+(config.boost_max*configNum), config.speed_max-(config.boost_max*configNum));
 
       //M5.Lcd.print("x: "); M5.Lcd.println(leftRightValue);
       //M5.Lcd.print("y: "); M5.Lcd.println(forwardReverseValue);

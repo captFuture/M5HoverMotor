@@ -1,7 +1,5 @@
 lv_task_handler(); //delay(5);
 
-etvoc = 000;
-
 if (first == 0){
     lv_obj_set_hidden(page,true);
     lv_win_clean(page);
@@ -11,12 +9,17 @@ if (first == 0){
 lv_label_set_text_fmt(txt1,   "speed: %d", driveSpeed );
 lv_label_set_text_fmt(txt2,   "configNum: %d", configNum);
 lv_label_set_text_fmt(txt3,   "%d", configNum);
+
+//lv_label_set_text_fmt(txt1,   "input: %d", forwardReverseInput );
 //lv_label_set_text_fmt(label2, "Speed %d\n\n\n\n\nkm/h", configNum);
 
 lv_gauge_set_value   (gauge,     0, driveSpeed );
 //lv_gauge_set_value   (gauge,     1, sentSpeed );
 
 lv_gauge_set_value   (gauge2,     0, batVoltage );
+lv_gauge_set_value   (gauge3,     0, forwardReverseValue*-1);
+lv_gauge_set_value   (gauge3,     1, forwardReverseInput);
+
 
 if(motorOn){
    //lv_style_set_bg_color(&st,LV_STATE_DEFAULT,lv_color_hex(0xE52521));

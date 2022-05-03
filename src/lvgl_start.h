@@ -15,6 +15,7 @@ static lv_obj_t * txt3;
 static lv_obj_t * label;
 static lv_obj_t * gauge;
 static lv_obj_t * gauge2;
+static lv_obj_t * gauge3;
 static lv_obj_t * tabview;
 uint32_t period = 10; //
 int tb = 4;           // Number of tabs

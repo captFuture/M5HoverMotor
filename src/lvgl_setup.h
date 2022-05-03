@@ -24,7 +24,7 @@
   // Add 4 tabs (the tabs are page (lv_page) and can be scrolled ------
   lv_obj_t *tab1 = lv_tabview_add_tab(tabview, "TELE");
   lv_obj_t *tab2 = lv_tabview_add_tab(tabview, "SPEED");
-  lv_obj_t *tab3 = lv_tabview_add_tab(tabview, "GAME");
+  lv_obj_t *tab3 = lv_tabview_add_tab(tabview, "INPUT");
   lv_obj_t *tab4 = lv_tabview_add_tab(tabview, "BATTERY");
   lv_tabview_set_tab_act(tabview, tab_pos, false); // display position
   static lv_style_t st; lv_style_init(&st);
@@ -82,16 +82,6 @@
   //-------------------------------------------------------------------
 
 
-
-   // tab 2 txt 3 -------------------------------------------------------------
-  txt3 = lv_label_create( tab2, NULL);
-  lv_obj_add_style(       txt3, LV_LABEL_PART_MAIN, &st2);
-  lv_obj_set_auto_realign(txt3, true);
-  lv_obj_align(           txt3, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, -40);
-  lv_label_set_align(     txt3, LV_LABEL_ALIGN_CENTER);
-  lv_label_set_text(      txt3, "0");
-  //-------------------------------------------------------------------
-
   // driveSpeed GAUGE tab2 ==================================================
   // Gauge : https://docs.lvgl.io/latest/en/html/widgets/gauge.html
   // Create a gauge on tab2 ===========================================
@@ -101,7 +91,6 @@
  
   needle_colors[0] = lv_color_hex(0x049CD8);
   needle_colors[1] = lv_color_hex(0xE52521);
-
 
   lv_page_set_scrollbar_mode(tab2, LV_SCROLLBAR_MODE_OFF); //scroll off
   gauge = lv_gauge_create(   tab2, NULL); // Display gauge on tab2
@@ -120,14 +109,43 @@
   lv_obj_align(            label2, NULL, LV_ALIGN_CENTER, 0, 0);
   lv_label_set_text(       label2, "Speed\n\n\n\n\nkm/h");
   lv_gauge_set_critical_value(gauge, 15);
+
   //------------------------------------------------------------------- 
   
-  // Game tab3 ==================================================
-  // Create a Game on tab3 ========================================== 
+   // tab 2 txt 3 -------------------------------------------------------------
+  txt3 = lv_label_create( tab2, NULL);
+  lv_obj_add_style(       txt3, LV_LABEL_PART_MAIN, &st2);
+  lv_obj_set_auto_realign(txt3, true);
+  lv_obj_align(           txt3, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, -40);
+  lv_label_set_align(     txt3, LV_LABEL_ALIGN_CENTER);
+  lv_label_set_text(      txt3, "0");
+  //-------------------------------------------------------------------
+
+  // tab3 ==================================================
+  // Create tab3 ========================================== 
   static lv_style_t st4; lv_style_init(&st4);
   lv_style_set_text_font(&st4,LV_STATE_DEFAULT,&lv_font_montserrat_16); 
   lv_page_set_scrollbar_mode(tab3, LV_SCROLLBAR_MODE_OFF); //scroll off
-  
+
+   // GAUGE tab3 ==================================================
+  // Gauge : https://docs.lvgl.io/latest/en/html/widgets/gauge.html
+  // Create a gauge on tab3 ===========================================
+
+  needle_colors[0] = lv_color_hex(0x049CD8); // blau
+  needle_colors[1] = lv_color_hex(0xE52521); // rot
+
+  lv_page_set_scrollbar_mode(tab3, LV_SCROLLBAR_MODE_OFF); //scroll off
+  gauge3 = lv_gauge_create(   tab3, NULL); // Display gauge on tab3
+
+  lv_gauge_set_needle_count(gauge3, 2, needle_colors);
+  lv_obj_set_size(          gauge3, 240, 240);
+  lv_gauge_set_range(       gauge3, -800, 800); // y range  
+  lv_obj_align(             gauge3, NULL, LV_ALIGN_CENTER, 0, -5);
+  lv_gauge_set_value(       gauge3, 0, 0);      // value
+  lv_gauge_set_value(       gauge3, 1, 0);      // value
+  lv_obj_set_style_local_bg_color(gauge3, LV_CHART_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0xFBD000)); //gelb
+  lv_gauge_set_critical_value(gauge3, 0);
+
   //-------------------------------------------------------------------
   
     // Batterx GAUGE tab4 ==================================================

@@ -65,41 +65,42 @@ int16_t batVoltage = 0;
 int16_t boardTemp = 0;
 
 boolean triggerReleased = true;
-uint16_t configNum = 0;
+int16_t configNum = 0;
 
-uint16_t leftRightCalibration = 0;
-uint16_t forwardReverseCalibration = 0;
-uint16_t thresholdMovement = 100;
-uint16_t leftRightValue = 0;
-uint16_t forwardReverseValue = 0;
-uint16_t OLDleftRightValue = 0;
-uint16_t OLDforwardReverseValue = 0;
-uint16_t accel = config.accel_min; // Acceleration time [ms]
-uint16_t decel = config.accel_min; // Acceleration time [ms]
-uint16_t safetyCool = 10;
+int16_t leftRightCalibration = 0;
+int16_t forwardReverseCalibration = 0;
+int16_t thresholdMovement = 100;
+int16_t leftRightValue = 0;
+int16_t forwardReverseValue = 0;
+int16_t forwardReverseInput = 0;
+int16_t OLDleftRightValue = 0;
+int16_t OLDforwardReverseValue = 0;
+int16_t accel = config.accel_min; // Acceleration time [ms]
+int16_t decel = config.accel_min; // Acceleration time [ms]
+int16_t safetyCool = 10;
 
 
-uint16_t myDrive = 0;
-uint16_t oldmyDrive = 0;
+int16_t myDrive = 0;
+int16_t oldmyDrive = 0;
 
 typedef struct{
-   uint16_t start;
+   int16_t start;
    int16_t  steer;
    int16_t  speed;
-    uint16_t checksum;
+   int16_t checksum;
 } SerialCommand;
 SerialCommand Command;
 
 typedef struct{
-   uint16_t start;
+   int16_t start;
    int16_t  cmd1;
    int16_t  cmd2;
    int16_t  speedR_meas;
    int16_t  speedL_meas;
    int16_t  batVoltage;
    int16_t  boardTemp;
-   uint16_t cmdLed;
-   uint16_t checksum;
+   int16_t cmdLed;
+   int16_t checksum;
 } SerialFeedback;
 SerialFeedback Feedback;
 SerialFeedback NewFeedback;
@@ -116,12 +117,12 @@ void setup()
 
   while (!SPIFFS.begin()) {
     Serial.println(F("Failed to initialize SPIFFS"));
-    /*bool formatted = SPIFFS.format();
+    bool formatted = SPIFFS.format();
     if(formatted){
     Serial.println("\n\nSuccess formatting");
     }else{
         Serial.println("\n\nError formatting");
-    }*/
+    }
     delay(1000);
   }
 
@@ -153,7 +154,6 @@ void setup()
 uint32_t tabview_time = 5000;        // Auto Time
 uint32_t lastMillis = 0; 
 uint32_t last = 0;
-uint16_t eco2, etvoc, errstat, raw;  // Read data
 int first = 0;
 
 #include "hoverboard_telemetry.h"
