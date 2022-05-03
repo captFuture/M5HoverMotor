@@ -159,13 +159,25 @@ int first = 0;
 #include "hoverboard_telemetry.h"
 
 void accelerAte(int16_t start, int16_t target){
-  myDrive = target;
+    /*myDrive = start;
+    while(myDrive > target){
+      myDrive = myDrive - 1; 
+    }*/
+    myDrive = target;
+
   oldmyDrive = myDrive;
+  OLDforwardReverseValue = target; // start = target
 }
 
 void decelerAte(int16_t start, int16_t target){
-  myDrive = target;
+    /*myDrive = start;
+    while(myDrive < target){
+      myDrive = myDrive + 1; 
+    }*/
+    myDrive = target;
+
   oldmyDrive = myDrive;
+  OLDforwardReverseValue = target; // start = target
 }
 
 void calibrateCenter(int16_t statex, int16_t statey){

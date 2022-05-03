@@ -133,11 +133,12 @@
 
   needle_colors[0] = lv_color_hex(0x049CD8); // blau
   needle_colors[1] = lv_color_hex(0xE52521); // rot
+  needle_colors[2] = lv_color_hex(0x43B047); // gruen
 
   lv_page_set_scrollbar_mode(tab3, LV_SCROLLBAR_MODE_OFF); //scroll off
-  gauge3 = lv_gauge_create(   tab3, NULL); // Display gauge on tab3
+  gauge3 = lv_gauge_create(tab3, NULL); // Display gauge on tab3
 
-  lv_gauge_set_needle_count(gauge3, 2, needle_colors);
+  lv_gauge_set_needle_count(gauge3, 3, needle_colors);
   lv_obj_set_size(          gauge3, 240, 240);
   lv_gauge_set_range(       gauge3, -800, 800); // y range  
   lv_obj_align(             gauge3, NULL, LV_ALIGN_CENTER, 0, -5);
