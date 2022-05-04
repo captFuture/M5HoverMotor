@@ -4,8 +4,8 @@
   "passwd": "chillfumml",
   "speedprofile":[
     {
-      "speed_max":-300,
-      "speed_min":300,
+      "speed_max":300,
+      "speed_min":-300,
       "steer_max":100,
       "steer_min":-100,
       "accel":200,

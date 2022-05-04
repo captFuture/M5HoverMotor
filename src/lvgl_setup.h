@@ -26,6 +26,7 @@
   lv_obj_t *tab2 = lv_tabview_add_tab(tabview, "SPEED");
   lv_obj_t *tab3 = lv_tabview_add_tab(tabview, "INPUT");
   lv_obj_t *tab4 = lv_tabview_add_tab(tabview, "BATTERY");
+  lv_obj_t *tab5 = lv_tabview_add_tab(tabview, "Chart");
   lv_tabview_set_tab_act(tabview, tab_pos, false); // display position
   static lv_style_t st; lv_style_init(&st);
   lv_style_set_bg_color(&st,LV_STATE_DEFAULT,lv_color_hex(0x049CD8));
@@ -149,9 +150,9 @@
 
   //-------------------------------------------------------------------
   
-    // Batterx GAUGE tab4 ==================================================
+  // Batterx GAUGE tab4 ==================================================
   // Gauge : https://docs.lvgl.io/latest/en/html/widgets/gauge.html
-  // Create a gauge on tab2 ===========================================
+  // Create a gauge on tab4 ===========================================
   static lv_style_t st5; lv_style_init(&st5);
   lv_style_set_text_font(&st5,LV_STATE_DEFAULT,&lv_font_montserrat_16); 
   lv_page_set_scrollbar_mode(tab4, LV_SCROLLBAR_MODE_OFF); //scroll off
@@ -172,3 +173,25 @@
   lv_label_set_text(       label4, "Battery\n\n\n\n\nmAh");
     lv_gauge_set_critical_value(gauge2, 3600);
   //------------------------------------------------------------------- 
+
+  // speed CHART tab5 ==================================================
+  // Chart : https://docs.lvgl.io/latest/en/html/widgets/chart.html
+  // Create a chart on tab5 ===========================================
+
+  chart = lv_chart_create(tab5, NULL);
+  lv_obj_set_size(   chart, screenWidth -20, screenHeight -20); // size
+  lv_obj_align(      chart, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_chart_set_type( chart, LV_CHART_TYPE_LINE);
+  lv_chart_set_range(chart, -800, 800);  // y axis
+
+  ser1 = lv_chart_add_series(chart,LV_COLOR_BLUE);
+  ser2 = lv_chart_add_series(chart, LV_COLOR_RED);
+  ser3 = lv_chart_add_series(chart, LV_COLOR_GREEN);
+
+  led1  = lv_led_create(tab5, NULL);
+  lv_obj_align(led1, NULL, LV_ALIGN_CENTER, 0,0);
+  lv_led_off(led1);
+
+  led2  = lv_led_create(tab5, NULL);
+  lv_obj_align(led2, NULL, LV_ALIGN_CENTER, -50,0);
+  lv_led_off(led2);

@@ -32,15 +32,18 @@
       if( leftRightValue > -15 && leftRightValue < 15 ){
         leftRightValue = 0;
       }else{
-        leftRightValue = leftRightValue - leftRightCalibration;
+        
       }
 
       if(forwardReverseInput > -15 && forwardReverseInput < 15){
+        forwardReverseInput = 0;
         forwardReverseValue = 0;
-      }else if(forwardReverseInput < config.speed_max+(config.boost_max*configNum) && forwardReverseInput > config.speed_min+(config.boost_max*configNum)){
-        forwardReverseValue = 0;
+      }else if(forwardReverseInput < config.speed_min-(config.boost_max*configNum)){ 
+        forwardReverseValue = config.speed_min-(config.boost_max*configNum);
+      }else if(forwardReverseInput > config.speed_max+(config.boost_max*configNum)){
+        forwardReverseValue = config.speed_max+(config.boost_max*configNum);
       }else{
-        forwardReverseValue = forwardReverseValue - forwardReverseCalibration;
+        
       }
 
       /*if(forwardReverseInput < -50){
@@ -48,16 +51,33 @@
       }*/
 
       leftRightValue = map(leftRightValue, -100, 100, config.steer_min, config.steer_max);
-      forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min+(config.boost_max*configNum), config.speed_max-(config.boost_max*configNum));
+      forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min-(config.boost_max*configNum), config.speed_max+(config.boost_max*configNum));
 
+      //myDrive = forwardReverseValue;
 
-      if(OLDforwardReverseValue > forwardReverseValue){       // brake
-        //decelerAte(OLDforwardReverseValue, forwardReverseValue);
-        myDrive = forwardReverseValue;
-      }else if(OLDforwardReverseValue < forwardReverseValue){ 
-        //accelerAte(OLDforwardReverseValue, forwardReverseValue);
-        myDrive = forwardReverseValue;
+      if(forwardReverseInput > -5 && forwardReverseInput < 5){
+        lv_led_off(led1);
+        lv_led_off(led2);
+        myDrive = 0;
+      }else{
+        lv_led_on(led1);
+        lv_led_on(led2);
+
+        if(forwardReverseInput > 5){ // forward
+          lv_led_off(led2);
+          lv_led_on(led1);
+          forWard(OLDforwardReverseValue, forwardReverseValue);
+
+        }else if(forwardReverseInput < -5){ // backward
+          lv_led_on(led2);
+          lv_led_off(led1);
+          backWard(OLDforwardReverseValue, forwardReverseValue);
+
+        }
       }
+     
+      OLDforwardReverseValue = forwardReverseValue;
+
 
     //float SentSpeedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
     //float tempSentSpeed = (float)forwardReverseValue * SentSpeedFactor;

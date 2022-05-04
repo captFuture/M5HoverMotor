@@ -16,9 +16,17 @@ static lv_obj_t * label;
 static lv_obj_t * gauge;
 static lv_obj_t * gauge2;
 static lv_obj_t * gauge3;
+static lv_obj_t * chart;
+static lv_chart_series_t * ser1;
+static lv_chart_series_t * ser2;
+static lv_chart_series_t * ser3;
+static lv_obj_t * led1;
+static lv_obj_t * led2;
+
 static lv_obj_t * tabview;
+
 uint32_t period = 10; //
-int tb = 4;           // Number of tabs
+int tb = 5;           // Number of tabs
 int tab_pos = 0;
 int time_count = 0;
 
