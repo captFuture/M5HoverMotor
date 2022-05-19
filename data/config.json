@@ -6,8 +6,8 @@
     {
       "speed_max":300,
       "speed_min":-300,
-      "steer_max":100,
-      "steer_min":-100,
+      "steer_max":200,
+      "steer_min":-200,
       "accel":200,
       "decel":200,
       "boost":100,

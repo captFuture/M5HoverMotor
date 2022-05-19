@@ -17,19 +17,22 @@
         }
 
         // USART command 1000 is 1000 RPM
-        // 300 + 100 * 0,1,2,3,4 = 300, 400, 500, 600, 700
+        // speed 300 + 100 * 0,1,2,3,4 = 300, 400, 500, 600, 700
+        // steer 200 + 100 * 0,1,2,3,4 = 200, 300, 400, 500, 600
         // mapped Value is sent to Controller and board speeds up
        
         delay(200);
       }
 
+      leftRightInput = state.x;
       leftRightValue = state.x;
       forwardReverseInput = state.y;
       forwardReverseValue = state.y;
       triggerstate = state.z;
       switchState = state.c;
 
-      if( leftRightValue > -15 && leftRightValue < 15 ){
+      if( leftRightInput > - 5 && leftRightInput < 5 ){
+        leftRightInput = 0;
         leftRightValue = 0;
       }else{
         
@@ -50,10 +53,19 @@
         forwardReverseInput = -50; // limit backward
       }*/
 
-      leftRightValue = map(leftRightValue, -100, 100, config.steer_min, config.steer_max);
+      leftRightValue = map(leftRightInput, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
+
+      if(leftRightValue > 500){
+        leftRightValue = 500;
+      }else if(leftRightValue < 300){
+        leftRightValue = 300;
+      }
+
       forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min-(config.boost_max*configNum), config.speed_max+(config.boost_max*configNum));
 
       //myDrive = forwardReverseValue;
+      lv_gauge_set_value   (gauge3,     0, forwardReverseValue);
+      lv_gauge_set_value   (gauge3,     1, forwardReverseInput);
 
       if(forwardReverseInput > -5 && forwardReverseInput < 5){
         lv_led_off(led1);
@@ -66,12 +78,28 @@
         if(forwardReverseInput > 5){ // forward
           lv_led_off(led2);
           lv_led_on(led1);
-          forWard(OLDforwardReverseValue, forwardReverseValue);
+          if(rampDrive){
+            if(OLDforwardReverseValue < forwardReverseValue){          
+              forWard(OLDforwardReverseValue, forwardReverseValue, 1); // accel
+            }else{
+              forWard(OLDforwardReverseValue, forwardReverseValue, 0); // decel
+            }
+          }else{
+            myDrive = forwardReverseValue;
+          }
 
         }else if(forwardReverseInput < -5){ // backward
           lv_led_on(led2);
           lv_led_off(led1);
-          backWard(OLDforwardReverseValue, forwardReverseValue);
+          if(rampDrive){
+            if(OLDforwardReverseValue > forwardReverseValue){          
+              backWard(OLDforwardReverseValue, forwardReverseValue, 1); // accel
+            }else{
+              backWard(OLDforwardReverseValue, forwardReverseValue, 0); // decel
+            }
+          }else{
+            myDrive = forwardReverseValue;
+          }
 
         }
       }

@@ -17,8 +17,8 @@ struct Config {
   int speed_min;
   int steer_max;
   int steer_min;
-  int accel_min;
-  int decel_min;
+  unsigned int accel_min;
+  unsigned int decel_min;
   int boost_max;
 };
 
@@ -33,7 +33,7 @@ const char* password = config.passwd;
 #define PIN_SCL 22
 #define WII_I2C_PORT 0
 #define READ_TASK_CPU 0
-#define READ_DELAY 30
+#define READ_DELAY 10
 static unsigned int controller_type;
 
 #define HOVER_SERIAL_BAUD   115200      // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
@@ -71,15 +71,16 @@ int16_t leftRightCalibration = 0;
 int16_t forwardReverseCalibration = 0;
 int16_t thresholdMovement = 100;
 int16_t leftRightValue = 0;
+int16_t leftRightInput = 0;
 int16_t forwardReverseValue = 0;
 int16_t forwardReverseInput = 0;
 int16_t OLDleftRightValue = 0;
 int16_t OLDforwardReverseValue = 0;
-int16_t accel = config.accel_min; // Acceleration time [ms]
-int16_t decel = config.accel_min; // Acceleration time [ms]
+unsigned int accel = config.accel_min; // Acceleration time [ms]
+unsigned int decel = config.accel_min; // Acceleration time [ms]
 int16_t safetyCool = 10;
 
-
+boolean rampDrive = false;
 int16_t myDrive = 0;
 int16_t oldmyDrive = 0;
 
@@ -105,6 +106,8 @@ typedef struct{
 SerialFeedback Feedback;
 SerialFeedback NewFeedback;
 
+ramp speedRamp;    
+
 #include "lvgl_start.h"
 #include "configload.h"
 
@@ -114,14 +117,15 @@ void setup()
   M5.begin();
   Serial.begin(SERIAL_BAUD);
   HoverSerial.begin(HOVER_SERIAL_BAUD);
+  speedRamp.go(0);
 
   while (!SPIFFS.begin()) {
     Serial.println(F("Failed to initialize SPIFFS"));
     bool formatted = SPIFFS.format();
     if(formatted){
-    Serial.println("\n\nSuccess formatting");
+      Serial.println("\n\nSuccess formatting");
     }else{
-        Serial.println("\n\nError formatting");
+      Serial.println("\n\nError formatting");
     }
     delay(1000);
   }
@@ -158,21 +162,37 @@ int first = 0;
 
 #include "hoverboard_telemetry.h"
 
-    void forWard(int16_t start, int16_t target){
+    void forWard(int16_t start, int16_t target, int8_t direction){
         myDrive = start;
-        while(myDrive < target){
-          myDrive = myDrive + 1; 
+        speedRamp.go(myDrive);
+        if(direction == 1){
+          speedRamp.go(target, 200, LINEAR, ONCEFORWARD); // accel
+        }else{
+          speedRamp.go(target, 500, LINEAR, ONCEBACKWARD); // decel
         }
-        //myDrive = target;
+        while(speedRamp.getCompletion() < 100){
+          speedRamp.update();
+          lv_gauge_set_value   (gauge3,     2, myDrive);
+        }
+        
+      //myDrive = target;
       oldmyDrive = myDrive;
     }
 
-    void backWard(int16_t start, int16_t target){
+    void backWard(int16_t start, int16_t target, int8_t direction){
         myDrive = start;
-        while(myDrive > target){
-          myDrive = myDrive - 1; 
+        speedRamp.go(myDrive);
+        if(direction == 1){
+          speedRamp.go(target, 200, LINEAR, ONCEBACKWARD); // accel
+        }else{
+          speedRamp.go(target, 500, LINEAR, ONCEFORWARD); // decel
         }
-        //myDrive = target;
+        while(speedRamp.getCompletion() < 100){
+          speedRamp.update();
+          lv_gauge_set_value   (gauge3,     2, myDrive);
+        }
+        
+      //myDrive = target;
       oldmyDrive = myDrive;
     }
 
@@ -198,7 +218,7 @@ void loop(void)
     iTimeSend = millis();
 
     if(motorOn == true){
-      SendCommand(leftRightValue, myDrive);
+      SendCommand(leftRightValue, myDrive * -1);
     }else{
       myDrive = 0;
       SendCommand(0, 0);

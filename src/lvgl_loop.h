@@ -6,8 +6,8 @@ if (first == 0){
     lv_label_set_text_fmt(label," ");
     first = 1;
 } 
-//lv_label_set_text_fmt(txt1,   "speed: %d", driveSpeed );
-lv_label_set_text_fmt(txt1,   "SetSpeed: %d", forwardReverseInput );
+lv_label_set_text_fmt(txt1,   "speed: %d", driveSpeed );
+//lv_label_set_text_fmt(txt1,   "SetSpeed: %d", forwardReverseInput );
 lv_label_set_text_fmt(txt2,   "configNum: %d", configNum);
 lv_label_set_text_fmt(txt3,   "%d", configNum);
 
@@ -18,9 +18,9 @@ lv_gauge_set_value   (gauge,     0, driveSpeed );
 //lv_gauge_set_value   (gauge,     1, sentSpeed );
 
 lv_gauge_set_value   (gauge2,     0, batVoltage );
-lv_gauge_set_value   (gauge3,     0, forwardReverseValue);
-lv_gauge_set_value   (gauge3,     1, forwardReverseInput);
-lv_gauge_set_value   (gauge3,     2, myDrive);
+//lv_gauge_set_value   (gauge3,     0, forwardReverseValue);
+//lv_gauge_set_value   (gauge3,     1, forwardReverseInput);
+//lv_gauge_set_value   (gauge3,     2, myDrive);
 
 
 if(motorOn){

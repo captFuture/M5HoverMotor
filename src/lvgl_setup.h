@@ -189,9 +189,9 @@
   ser3 = lv_chart_add_series(chart, LV_COLOR_GREEN);
 
   led1  = lv_led_create(tab5, NULL);
-  lv_obj_align(led1, NULL, LV_ALIGN_CENTER, 0,0);
+  lv_obj_align(led1, NULL, LV_ALIGN_CENTER, -50,-30);
   lv_led_off(led1);
 
   led2  = lv_led_create(tab5, NULL);
-  lv_obj_align(led2, NULL, LV_ALIGN_CENTER, -50,0);
+  lv_obj_align(led2, NULL, LV_ALIGN_CENTER, -100,-30);
   lv_led_off(led2);
