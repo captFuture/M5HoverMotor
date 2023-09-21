@@ -36,7 +36,7 @@ const char* password = config.passwd;
 #define READ_DELAY 10
 static unsigned int controller_type;
 
-#define HOVER_SERIAL_BAUD   115200      // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
+#define HOVER_SERIAL_BAUD   19200      // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
 #define SERIAL_BAUD         115200      // [-] Baud rate for built-in Serial (used for the Serial Monitor)
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
 #define TIME_SEND           100         // [ms] Sending time interval
@@ -84,39 +84,22 @@ boolean rampDrive = false;
 int16_t myDrive = 0;
 int16_t oldmyDrive = 0;
 
-typedef struct{
-   int16_t start;
-   int16_t  steer;
-   int16_t  speed;
-   int16_t checksum;
-} SerialCommand;
-SerialCommand Command;
-
-typedef struct{
-   int16_t start;
-   int16_t  cmd1;
-   int16_t  cmd2;
-   int16_t  speedR_meas;
-   int16_t  speedL_meas;
-   int16_t  batVoltage;
-   int16_t  boardTemp;
-   int16_t cmdLed;
-   int16_t checksum;
-} SerialFeedback;
-SerialFeedback Feedback;
-SerialFeedback NewFeedback;
-
 ramp speedRamp;    
 
 #include "lvgl_start.h"
 #include "configload.h"
+#include "hoverserial.h"
+
+#define HoverSerial Serial2
+SerialFeedback oHoverFeedback;
 
 // ########################## SETUP ##########################
 void setup() 
 {
   M5.begin();
   Serial.begin(SERIAL_BAUD);
-  HoverSerial.begin(HOVER_SERIAL_BAUD);
+  
+  SetupHoverArduino(HoverSerial,19200);
   speedRamp.go(0);
 
   while (!SPIFFS.begin()) {
@@ -159,8 +142,6 @@ uint32_t tabview_time = 5000;        // Auto Time
 uint32_t lastMillis = 0; 
 uint32_t last = 0;
 int first = 0;
-
-#include "hoverboard_telemetry.h"
 
     void forWard(int16_t start, int16_t target, int8_t direction){
         myDrive = start;
@@ -212,16 +193,25 @@ void loop(void)
     #include "nunchuk.h"
   }
 
-  ReceiveTelemetry();
+  // Check for new received data
+  if (Receive(HoverSerial,oHoverFeedback)) 
+  {
+    HoverLog(oHoverFeedback);
+  }
 
   if (millis() > TIME_SEND + iTimeSend ){
     iTimeSend = millis();
 
     if(motorOn == true){
-      SendCommand(leftRightValue, myDrive * -1);
+      int16_t leftwheel= myDrive;
+      int16_t rightwheel= myDrive;
+
+      Send(HoverSerial, leftwheel, rightwheel );
+      //Send(HoverSerial, leftwheel, rightwheel );
+      //Serial.print("Sending: "); Serial.print(myDrive); Serial.print(" "); Serial.print(myDrive); Serial.println(" "); 
     }else{
       myDrive = 0;
-      SendCommand(0, 0);
+      Send(HoverSerial, 0, 0);
     }
 
 

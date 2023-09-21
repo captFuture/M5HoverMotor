@@ -31,7 +31,7 @@
       triggerstate = state.z;
       switchState = state.c;
 
-      if( leftRightInput > - 5 && leftRightInput < 5 ){
+      if( leftRightInput > - 15 && leftRightInput < 15 ){
         leftRightInput = 0;
         leftRightValue = 0;
       }else{
@@ -55,11 +55,11 @@
 
       leftRightValue = map(leftRightInput, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
 
-      if(leftRightValue > 500){
+      /*if(leftRightValue > 300){
         leftRightValue = 500;
       }else if(leftRightValue < 300){
         leftRightValue = 300;
-      }
+      }*/
 
       forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min-(config.boost_max*configNum), config.speed_max+(config.boost_max*configNum));
 
