@@ -1,3 +1,5 @@
+//#define FEEDBACK_ROBO   // adds current and odometer to the feedback struct
+
 //#define DEBUG_RX      // for debugging the serial receive data
 #define DEBUG_HOVER   // will serial.print the feedback struct
 
@@ -18,26 +20,37 @@ typedef struct{
    int16_t  speedR_meas;
    int16_t  speedL_meas;
    int16_t  batVoltage;
+#ifdef FEEDBACK_ROBO  
+   int16_t  iAmpL;    // ROBO 100*A
+   int16_t  iAmpR;    // ROBO 100*A
+   int16_t  iOdomL;    // ROBO 100*A
+   int16_t  iOdomR;    // ROBO 100*A
+ #endif
    int16_t  boardTemp;
    uint16_t cmdLed;
    //uint16_t checksum;
 } SerialFeedback;
 
 
-template <typename O,typename I> void SetupHoverEsp32(O& oSerial, I iBaud, I pin_RX, I pin_TX){
+template <typename O,typename I> void SetupHoverEsp32(O& oSerial, I iBaud, I pin_RX, I pin_TX)
+{
+  // Serial2.begin(baud-rate, protocol, RX pin, TX pin);
   oSerial.begin(iBaud, SERIAL_8N1, pin_RX, pin_TX);  //Serial1 = 0, 4   Serial2 = 16,17;
 }
 
-template <typename O,typename I> void SetupHoverArduino(O& oSerial, I iBaud){
+template <typename O,typename I> void SetupHoverArduino(O& oSerial, I iBaud)
+{
   oSerial.begin(iBaud);
 }
 
 
 // ########################## SEND ##########################
+//void Send(Serial& oSerial, int16_t uSteer, int16_t uSpeed)
 template <typename O,typename U> void Send(O& oSerial, U uSteer, U uSpeed)
 {
   // Create command
-  //DEBUGT("uSteer",uSteer);DEBUGLN("uSpeed",uSpeed);
+  //Serial.print("uSteer"); Serial.println(uSteer);
+  //Serial.print("uSpeed"); Serial.println(uSpeed);
   Command.start    = (uint16_t)START_FRAME;
   Command.steer    = (int16_t)uSteer;
   Command.speed    = (int16_t)uSpeed;
@@ -51,7 +64,7 @@ template <typename O,typename I> void SendLR(O& oSerial, I iSpeedLeft, I iSpeedR
 {
   // speed coeff in config.h must be 1.0 : (DEFAULT_)SPEED_COEFFICIENT   16384
   // steer coeff in config.h must be 0.5 : (DEFAULT_)STEER_COEFFICIENT   8192 
-  Send(oSerial,iSpeedRight - iSpeedLeft,(iSpeedLeft + iSpeedRight)/2);
+  Send(oSerial,iSpeedRight,iSpeedLeft);
 }
 
 
@@ -60,18 +73,19 @@ void HoverLog(SerialFeedback& Feedback)
 {
   #ifdef DEBUG_HOVER
     //Serial.print("start="); Serial.print(Feedback.start,HEX);
-    Serial.print("cmdR:");Serial.print(Feedback.cmd1);
-    Serial.print("\tcmdL:");Serial.print(Feedback.cmd2);
+    Serial.print("cmd1:");Serial.print(Feedback.cmd1);
+    Serial.print("\tcmd2:");Serial.print(Feedback.cmd2);
     Serial.print("\tvR:");Serial.print(Feedback.speedR_meas);
     Serial.print("\tvL:");Serial.print(Feedback.speedL_meas);
     Serial.print("\tV:");Serial.print(Feedback.batVoltage/100.0);
-    Serial.print("\tT:");Serial.print(Feedback.boardTemp);
-    Serial.print("\tled:");Serial.print(Feedback.cmdLed);
-    Serial.print("\tleftright:");Serial.print(leftRightValue);
-    Serial.print("\tforwardreverse:");Serial.print(forwardReverseValue);
-    Serial.print("\tleftrightC:");Serial.print(leftRightCalibration);
-    Serial.print("\tforwardreverseC:");Serial.println(forwardReverseCalibration);
-    
+    #ifdef FEEDBACK_ROBO
+      Serial.print("\t AL:");Serial.print(Feedback.iAmpL/100.0);
+      Serial.print("\t AR:");Serial.print(Feedback.iAmpR/100.0);
+      Serial.print("\txL:");Serial.print(Feedback.iOdomL);
+      Serial.print("\txR:");Serial.print(Feedback.iOdomR);
+    #endif
+    Serial.print("\tT:");Serial.println(Feedback.boardTemp);
+    //Serial.print("\tled:");Serial.println(Feedback.cmdLed);
     //Serial.print("\tcrc="); Serial.println(Feedback.checksum,HEX);
   #endif
 }
@@ -83,7 +97,8 @@ void HoverLog(SerialFeedback& Feedback)
 #endif
 
 //boolean Receive(Serial& oSerial, SerialFeedback& Feedback)
-template <typename O,typename OF> boolean Receive(O& oSerial, OF& Feedback){
+template <typename O,typename OF> boolean Receive(O& oSerial, OF& Feedback)
+{
   int iAvail = oSerial.available() - sizeof(Feedback);
   int8_t iFirst = 1;
   while (iAvail >= 3+iFirst )
@@ -123,13 +138,16 @@ template <typename O,typename OF> boolean Receive(O& oSerial, OF& Feedback){
         chkRead |= (uint16_t)oSerial.read() << 8;
 
         uint16_t checksum;
-        checksum = (uint16_t)(START_FRAME ^ tmpFeedback.cmd1 ^ tmpFeedback.cmd2 ^ tmpFeedback.speedR_meas ^ tmpFeedback.speedL_meas ^ tmpFeedback.batVoltage ^ tmpFeedback.boardTemp ^ tmpFeedback.cmdLed);
+        checksum = (uint16_t)(START_FRAME ^ tmpFeedback.cmd1 ^ tmpFeedback.cmd2 ^ tmpFeedback.speedR_meas ^ tmpFeedback.speedL_meas
+  //                      ^ tmpFeedback.iAmpL ^ tmpFeedback.iAmpR // ROBO
+  //                      ^ tmpFeedback.iOdomL ^ tmpFeedback.iOdomR // ROBO
+                            ^ tmpFeedback.batVoltage ^ tmpFeedback.boardTemp ^ tmpFeedback.cmdLed);
 
         if (checksum == chkRead)  //tmpFeedback.checksum
         {
             memcpy(&Feedback, &tmpFeedback, sizeof(SerialFeedback));
             #ifdef DEBUG_RX
-              Serial.println(" :-)))))))))))))))))))))))))))");
+              //Serial.println(" :-)))))))))))))))))))))))))))");
             #endif
             
             return true;

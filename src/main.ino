@@ -1,3 +1,9 @@
+/*
+For M5Stack Core esp32 with connected Wii Nunchuck
+Serial connection to Hoverboard controller with firmware https://github.com/RoboDurden/hoverboard-firmware-hack-FOC in TANK mode
+Todo: control steering...
+*/
+
 //#include <Arduino.h>
 #include <M5Stack.h>
 #include "wii_i2c.h"
@@ -99,7 +105,7 @@ void setup()
   M5.begin();
   Serial.begin(SERIAL_BAUD);
   
-  SetupHoverArduino(HoverSerial,19200);
+  SetupHoverArduino(HoverSerial,115200);
   speedRamp.go(0);
 
   while (!SPIFFS.begin()) {
@@ -156,7 +162,7 @@ int first = 0;
           lv_gauge_set_value   (gauge3,     2, myDrive);
         }
         
-      //myDrive = target;
+      myDrive = target;
       oldmyDrive = myDrive;
     }
 
@@ -173,7 +179,7 @@ int first = 0;
           lv_gauge_set_value   (gauge3,     2, myDrive);
         }
         
-      //myDrive = target;
+      myDrive = target;
       oldmyDrive = myDrive;
     }
 
@@ -205,6 +211,8 @@ void loop(void)
     if(motorOn == true){
       int16_t leftwheel= myDrive;
       int16_t rightwheel= myDrive;
+
+      //TODO -> generate steering out of 
 
       Send(HoverSerial, leftwheel, rightwheel );
       //Send(HoverSerial, leftwheel, rightwheel );

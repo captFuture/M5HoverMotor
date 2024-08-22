@@ -53,8 +53,8 @@
         forwardReverseInput = -50; // limit backward
       }*/
 
-      leftRightValue = map(leftRightInput, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
-
+      //leftRightValue = map(leftRightInput, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
+      leftRightValue = leftRightInput;
       /*if(leftRightValue > 300){
         leftRightValue = 500;
       }else if(leftRightValue < 300){
