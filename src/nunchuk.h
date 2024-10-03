@@ -49,23 +49,16 @@
         
       }
 
-      /*if(forwardReverseInput < -50){
-        forwardReverseInput = -50; // limit backward
-      }*/
+      //leftRightValue = leftRightInput;
+      leftRightValue = map(leftRightInput, -100, 100, config.steer_min, config.steer_max);
 
-      //leftRightValue = map(leftRightInput, -100, 100, config.steer_min-(config.boost_max*configNum), config.steer_max+(config.boost_max*configNum));
-      leftRightValue = leftRightInput;
-      /*if(leftRightValue > 300){
-        leftRightValue = 500;
-      }else if(leftRightValue < 300){
-        leftRightValue = 300;
-      }*/
-
+      lv_gauge_set_value   (gauge3,     2, leftRightValue);
       forwardReverseValue = map(forwardReverseInput, -100, 100, config.speed_min-(config.boost_max*configNum), config.speed_max+(config.boost_max*configNum));
 
       //myDrive = forwardReverseValue;
       lv_gauge_set_value   (gauge3,     0, forwardReverseValue);
       lv_gauge_set_value   (gauge3,     1, forwardReverseInput);
+
 
       if(forwardReverseInput > -5 && forwardReverseInput < 5){
         lv_led_off(led1);
@@ -105,10 +98,4 @@
       }
      
       OLDforwardReverseValue = forwardReverseValue;
-
-
-    //float SentSpeedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
-    //float tempSentSpeed = (float)forwardReverseValue * SentSpeedFactor;
-    //sentSpeed = abs((int)tempSentSpeed);
-
     }

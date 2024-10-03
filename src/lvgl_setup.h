@@ -96,12 +96,12 @@
   lv_page_set_scrollbar_mode(tab2, LV_SCROLLBAR_MODE_OFF); //scroll off
   gauge = lv_gauge_create(   tab2, NULL); // Display gauge on tab2
 
-  lv_gauge_set_needle_count(gauge, 2, needle_colors);
+  lv_gauge_set_needle_count(gauge, 1, needle_colors);
   lv_obj_set_size(          gauge, 240, 240);
   lv_gauge_set_range(       gauge, 0, 25); // y range  
   lv_obj_align(             gauge, NULL, LV_ALIGN_CENTER, 0, -5);
   lv_gauge_set_value(       gauge, 0, 0);      // value
-  lv_gauge_set_value(       gauge, 1, 0);      // value
+  //lv_gauge_set_value(       gauge, 1, 0);      // value
   lv_obj_set_style_local_bg_color(gauge, LV_CHART_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0xFBD000)); 
 
   lv_obj_t * label2 = lv_label_create(tab2, NULL);
@@ -109,7 +109,7 @@
   lv_obj_set_auto_realign( label2, true);
   lv_obj_align(            label2, NULL, LV_ALIGN_CENTER, 0, 0);
   lv_label_set_text(       label2, "Speed\n\n\n\n\nkm/h");
-  lv_gauge_set_critical_value(gauge, 15);
+  lv_gauge_set_critical_value(gauge, 20);
 
   //------------------------------------------------------------------- 
   
@@ -134,7 +134,7 @@
 
   needle_colors[0] = lv_color_hex(0x049CD8); // blau
   needle_colors[1] = lv_color_hex(0xE52521); // rot
-  needle_colors[2] = lv_color_hex(0x43B047); // gruen
+  needle_colors[2] = lv_color_hex(0x43B047); // gruen ??
 
   lv_page_set_scrollbar_mode(tab3, LV_SCROLLBAR_MODE_OFF); //scroll off
   gauge3 = lv_gauge_create(tab3, NULL); // Display gauge on tab3
@@ -145,8 +145,9 @@
   lv_obj_align(             gauge3, NULL, LV_ALIGN_CENTER, 0, -5);
   lv_gauge_set_value(       gauge3, 0, 0);      // value
   lv_gauge_set_value(       gauge3, 1, 0);      // value
+  //lv_gauge_set_value(       gauge3, 2, 0);      // value
   lv_obj_set_style_local_bg_color(gauge3, LV_CHART_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0xFBD000)); //gelb
-  lv_gauge_set_critical_value(gauge3, 0);
+  lv_gauge_set_critical_value(gauge3, 750);
 
   //-------------------------------------------------------------------
   

@@ -47,7 +47,7 @@ static unsigned int controller_type;
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
 #define TIME_SEND           100         // [ms] Sending time interval
 
-//#define DEBUG_RX                        // [-] Debug received data. Prints all bytes to serial (comment-out to disable)
+#define DEBUG_RX                        // [-] Debug received data. Prints all bytes to serial (comment-out to disable)
 HardwareSerial &HoverSerial = Serial2;
 
 // Global variables
@@ -212,7 +212,18 @@ void loop(void)
       int16_t leftwheel= myDrive;
       int16_t rightwheel= myDrive;
 
+      if(leftRightInput > 0){
+        leftwheel= myDrive ;
+        rightwheel= myDrive + abs(leftRightValue);
+      }else if(leftRightInput < 0){
+        leftwheel= myDrive + abs(leftRightValue);
+        rightwheel= myDrive;
+      }else{
+        leftwheel= myDrive ;
+        rightwheel= myDrive;
+      }
       //TODO -> generate steering out of 
+      
 
       Send(HoverSerial, leftwheel, rightwheel );
       //Send(HoverSerial, leftwheel, rightwheel );
@@ -225,7 +236,7 @@ void loop(void)
 
     lv_chart_set_next(chart, ser1, forwardReverseInput);
     lv_chart_set_next(chart, ser2, forwardReverseValue);
-    lv_chart_set_next(chart, ser3, myDrive);
+    lv_chart_set_next(chart, ser3, abs(leftRightInput));
   }
 
 }

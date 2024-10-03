@@ -12,6 +12,7 @@ static lv_obj_t * page;
 static lv_obj_t * txt1;
 static lv_obj_t * txt2;
 static lv_obj_t * txt3;
+//static lv_obj_t * txt4;
 static lv_obj_t * label;
 static lv_obj_t * gauge;
 static lv_obj_t * gauge2;

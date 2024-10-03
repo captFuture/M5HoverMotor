@@ -84,10 +84,13 @@ void HoverLog(SerialFeedback& Feedback)
       Serial.print("\txL:");Serial.print(Feedback.iOdomL);
       Serial.print("\txR:");Serial.print(Feedback.iOdomR);
     #endif
-    Serial.print("\tT:");Serial.println(Feedback.boardTemp);
+    Serial.print("\tT:");Serial.println(Feedback.boardTemp/100);
     //Serial.print("\tled:");Serial.println(Feedback.cmdLed);
     //Serial.print("\tcrc="); Serial.println(Feedback.checksum,HEX);
   #endif
+  float speedFactor = 2.0 * 3.14 * 0.08255 * 60 /1000;
+  float tempDriveSpeed = (float)Feedback.speedL_meas * speedFactor;
+  driveSpeed = abs((int)tempDriveSpeed);
 }
 
 
