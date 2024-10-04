@@ -212,10 +212,10 @@ void loop(void)
       int16_t leftwheel= myDrive;
       int16_t rightwheel= myDrive;
 
-      if(leftRightInput > 0){
+      if(leftRightInput < 0){
         leftwheel= myDrive ;
         rightwheel= myDrive + abs(leftRightValue);
-      }else if(leftRightInput < 0){
+      }else if(leftRightInput > 0){
         leftwheel= myDrive + abs(leftRightValue);
         rightwheel= myDrive;
       }else{
@@ -236,7 +236,7 @@ void loop(void)
 
     lv_chart_set_next(chart, ser1, forwardReverseInput);
     lv_chart_set_next(chart, ser2, forwardReverseValue);
-    lv_chart_set_next(chart, ser3, abs(leftRightInput));
+    lv_chart_set_next(chart, ser3, leftRightInput);
   }
 
 }
