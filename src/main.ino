@@ -1,7 +1,6 @@
 /*
 For M5Stack Core esp32 with connected Wii Nunchuck
 Serial connection to Hoverboard controller with firmware https://github.com/RoboDurden/hoverboard-firmware-hack-FOC in TANK mode
-Todo: control steering...
 */
 
 //#include <Arduino.h>
